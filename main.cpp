@@ -9,6 +9,7 @@ using namespace std;
 
 vector<int> trivial(string text, string pattern);
 vector<int> rabinKarpSearch(string text, string pattern, int primeNumber);
+void outputToFile(fstream& output, vector<int> RK, vector<int> triv);
 
 int main(int argc, char* argv[])
 {
@@ -21,47 +22,25 @@ int main(int argc, char* argv[])
     start = std::clock();
     vector<int> triv = trivial(text, "the");
 
-    std::cout << "Time: " << (std::clock() - start) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
+    std::cout << "Trivial Time: " << (std::clock() - start) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
 
 
     start = std::clock();
     vector<int> RK = rabinKarpSearch(text, "the", 101);
-    std::cout << "Time: " << (std::clock() - start) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
+    std::cout << "Rabin-Karp Time: " << (std::clock() - start) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
 
     cout << "Trivial: " << triv.size() << endl;
     cout << "Rabin-Karp: " << RK.size() << endl;
 
-    bool pls  = true;
-    for(int i = 0; i < RK.size(); i++)
-    {
-        if(RK.at(i) != triv.at(i))
-        {
-            pls = false;
-            break;
-        }
-    }
-    cout << pls << endl;
     fstream output;
     output.open(argv[2], ios::out);
-    output << "Trivial" << endl;
-    for(int i = 0; i < triv.size() - 1; i++)
+    if(!output)
     {
-        output << triv.at(i) << ", ";
-        if(i % 20 == 0)
-            output << endl;
+        cout << "Didn't open output file" << endl;
+        return -1;
     }
-    output << triv.at(triv.size() - 1) << endl;
 
-    output << "Rabin Karp" << endl;
-    for(int i = 0; i < RK.size() - 1; i++)
-    {
-        output << RK.at(i) << ", ";
-        if(i % 20 == 0)
-            output << endl;
-    }
-    output << RK.at(RK.size() - 1) << endl;
-
-    output.close();
+    outputToFile(output, RK, triv);
     return 0;
 }
 
@@ -119,4 +98,27 @@ vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
     }
 
     return patternMatches;
+}
+
+void outputToFile(fstream& output, vector<int> RK, vector<int> triv)
+{
+    output << "Trivial" << endl;
+    for(int i = 0; i < triv.size() - 1; i++)
+    {
+        output << triv.at(i) << ", ";
+        if(i % 20 == 0 && i != 0)
+            output << endl;
+    }
+    output << triv.at(triv.size() - 1) << endl;
+
+    output << "Rabin Karp" << endl;
+    for(int i = 0; i < RK.size() - 1; i++)
+    {
+        output << RK.at(i) << ", ";
+        if(i % 20 == 0 && i != 0)
+            output << endl;
+    }
+    output << RK.at(RK.size() - 1) << endl;
+
+    output.close();
 }

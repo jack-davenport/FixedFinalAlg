@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/cygdrive/c/Users/jackd/Documents/FixedFinalAlg/main.cpp
+iostream
+-
+string
+-
+vector
+-
+cstring
+-
+fstream
+-
+ctime
+-
+math.h
+-
+

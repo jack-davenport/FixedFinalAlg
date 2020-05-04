@@ -1,0 +1,8 @@
+C:\Users\jackd\.CLion2019.3\system\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /cygdrive/c/Users/jackd/Documents/FixedFinalAlg
+CMake Error: File /cygdrive/c/Users/jackd/Documents/FixedFinalAlg/Pride.txt does not exist.
+CMake Error at CMakeLists.txt:10 (configure_file):
+  configure_file Problem configuring file
+
+
+-- Configuring incomplete, errors occurred!
+See also "/cygdrive/c/Users/jackd/Documents/FixedFinalAlg/cmake-build-debug/CMakeFiles/CMakeOutput.log".

@@ -9,38 +9,41 @@ using namespace std;
 
 vector<int> trivial(string text, string pattern);
 vector<int> rabinKarpSearch(string text, string pattern, int primeNumber);
-void outputToFile(fstream& output, vector<int> RK, vector<int> triv);
+void outputToFile(fstream& output, vector<int> RK, vector<int> triv, clock_t rkTime, clock_t trivialTime);
 
 int main(int argc, char* argv[])
 {
+    if(argc < 2)
+    {
+        cout << "Not enough arguments provided" << endl;
+        return -1;
+    }
+
     ifstream ifs(argv[1]);
     string text( (std::istreambuf_iterator<char>(ifs) ),
                  (std::istreambuf_iterator<char>()    ) );//puts the read in textfile into variable
 
-    std::clock_t start;
-
-    start = std::clock();
-    vector<int> triv = trivial(text, "the");
-
-    std::cout << "Trivial Time: " << (std::clock() - start) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
+    std::clock_t startTrivial;
+    startTrivial = std::clock();//used to time the trivial function
+    vector<int> triv = trivial(text, "the");//runs the trivial function and saves the returned vector locally in triv
+    startTrivial = std:: clock() - startTrivial;//calculates time of the function
 
 
-    start = std::clock();
-    vector<int> RK = rabinKarpSearch(text, "the", 101);
-    std::cout << "Rabin-Karp Time: " << (std::clock() - start) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
 
-    cout << "Trivial: " << triv.size() << endl;
-    cout << "Rabin-Karp: " << RK.size() << endl;
+    std::clock_t startRK;//used to time the rabin-karp function
+    startRK = std::clock();
+    vector<int> RK = rabinKarpSearch(text, "the", 101);//runs the rabinKarpsearch and saves the returned vector locally in RK
+    startRK = std::clock() - startRK;//gets the time of the functio
 
-    fstream output;
-    output.open(argv[2], ios::out);
-    if(!output)
+    fstream output;//output fstream
+    output.open(argv[2], ios::out);//opens output file
+    if(!output)//if cant open the output file
     {
         cout << "Didn't open output file" << endl;
         return -1;
     }
+    outputToFile(output, RK, triv, startRK, startTrivial);//sends the info into function to be formatted for the output file and then added
 
-    outputToFile(output, RK, triv);
     return 0;
 }
 
@@ -56,7 +59,7 @@ vector<int> trivial(string text, string pattern)
         }
     }
 
-    return indexOfMatches;
+    return indexOfMatches;//returns the indices
 }
 
 vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
@@ -100,10 +103,13 @@ vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
     return patternMatches;
 }
 
-void outputToFile(fstream& output, vector<int> RK, vector<int> triv)
+void outputToFile(fstream& output, vector<int> RK, vector<int> triv, clock_t rkTime, clock_t trivialTime)
 {
-    output << "Trivial" << endl;
-    for(int i = 0; i < triv.size() - 1; i++)
+    output << "Trivial" << endl;//labels this section as trivial info
+    output << "Trivial Time: " <<trivialTime / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;//adds the time of function to output
+    output << "Instances of pattern found: " << triv.size() << endl; //how many pattern matches in text
+
+    for(int i = 0; i < triv.size() - 1; i++)//prints the index the text matches the pattern at for triival
     {
         output << triv.at(i) << ", ";
         if(i % 20 == 0 && i != 0)
@@ -111,8 +117,11 @@ void outputToFile(fstream& output, vector<int> RK, vector<int> triv)
     }
     output << triv.at(triv.size() - 1) << endl;
 
-    output << "Rabin Karp" << endl;
-    for(int i = 0; i < RK.size() - 1; i++)
+    output << "Rabin-Karp" << endl;//labels this section as rabin karp
+    output << "Rabin-Karp Time: " << rkTime / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;//adds the timing of rk function to the output
+    output << "Instances of pattern found: " << RK.size() << endl;//adds how many pattern matches in the text were found
+
+    for(int i = 0; i < RK.size() - 1; i++)//prints the index the text matches the pattern at for rabin-karp
     {
         output << RK.at(i) << ", ";
         if(i % 20 == 0 && i != 0)

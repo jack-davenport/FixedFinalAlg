@@ -1,6 +1,6 @@
 Trivial
-Trivial Time: 234 ms
-Instances of pattern found: 7449
+Trivial Time: 266 ms
+Instances of pattern found: 46
 Rabin-Karp
-Rabin-Karp Time: 16 ms
-Instances of pattern found: 7449
+Rabin-Karp Time: 31 ms
+Instances of pattern found: 46

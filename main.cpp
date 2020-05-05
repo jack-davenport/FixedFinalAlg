@@ -23,16 +23,20 @@ int main(int argc, char* argv[])
     string text( (std::istreambuf_iterator<char>(ifs) ),
                  (std::istreambuf_iterator<char>()    ) );//puts the read in textfile into variable
 
+
+    string pattern = "pride";//can enter the pattern you want to search for here
+
+
     std::clock_t startTrivial;
     startTrivial = std::clock();//used to time the trivial function
-    vector<int> triv = trivial(text, "the");//runs the trivial function and saves the returned vector locally in triv
+    vector<int> triv = trivial(text, pattern);//runs the trivial function and saves the returned vector locally in triv
     startTrivial = std:: clock() - startTrivial;//calculates time of the function
 
 
 
     std::clock_t startRK;//used to time the rabin-karp function
     startRK = std::clock();
-    vector<int> RK = rabinKarpSearch(text, "the", 101);//runs the rabinKarpsearch and saves the returned vector locally in RK
+    vector<int> RK = rabinKarpSearch(text, pattern, 101);//runs the rabinKarpsearch and saves the returned vector locally in RK
     startRK = std::clock() - startRK;//gets the time of the functio
 
     fstream output;//output fstream
@@ -65,6 +69,8 @@ vector<int> trivial(string text, string pattern)
     return indexOfMatches;//returns the indices
 }
 
+
+
 vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
 {
     vector<int> patternMatches;//vector holding indices of the pattern matches
@@ -72,12 +78,20 @@ vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
     int pHashVal = 0;//pattern hash value
     int subStringHashVal = 0;//substring hash value initialize to 0
 
-    int hash = static_cast<int>(pow(chars, pattern.length() - 1)) % primeNumber; //gets a hash that is valid based on the pattern
+
+
 
     for(int i = 0; i < pattern.length(); i++)
     {
         pHashVal = (chars * pHashVal + pattern.at(i)) % primeNumber;//determing pattern hash val
         subStringHashVal = (chars * subStringHashVal +  text.at(i)) % primeNumber; //d/etermine prime read hash val
+    }
+
+    int hash = 1;//hash started at 1
+
+    for(int i = 0; i < pattern.length() - 1; i++)
+    {
+        hash = (chars * hash) % primeNumber;//hash = chars * hash % primenumber does a for loop instead of power function bc that will lead to a overflow
     }
 
     for(int i = 0; i <= text.length() - pattern.length(); i++)//iterate through length of text - length of pattern because rolling hash we dont iterate through each
@@ -104,6 +118,8 @@ vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
 
     return patternMatches;
 }
+
+
 
 void outputToFile(fstream& output, vector<int>& RK, vector<int>& triv, clock_t rkTime, clock_t trivialTime, bool showPatternLocation)
 {

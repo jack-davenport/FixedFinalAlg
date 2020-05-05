@@ -7,8 +7,8 @@
 #include <math.h>
 using namespace std;
 
-vector<int> trivial(string text, string pattern);
-vector<int> rabinKarpSearch(string text, string pattern, int primeNumber);
+vector<int> trivial(string text, string pattern);//pass in the text and looks for every location of pattern using trivial search
+vector<int> rabinKarpSearch(string text, string pattern, int primeNumber);//uses rabin karp taking in prime nunmber text and pattern to look for every pattern matchw
 void outputToFile(fstream& output, vector<int>& RK, vector<int>& triv, clock_t rkTime, clock_t trivialTime, bool showPatternLocation);
 
 int main(int argc, char* argv[])
@@ -70,10 +70,9 @@ vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
     vector<int> patternMatches;//vector holding indices of the pattern matches
     int chars = 256;//number of characters in the alphabet
     int pHashVal = 0;//pattern hash value
-    int subStringHashVal = 0;
-    int hash = 1;
+    int subStringHashVal = 0;//substring hash value initialize to 0
 
-    hash = static_cast<int>(pow(chars, pattern.length() - 1)) % primeNumber; //gets a hash that is valid based on the pattern
+    int hash = static_cast<int>(pow(chars, pattern.length() - 1)) % primeNumber; //gets a hash that is valid based on the pattern
 
     for(int i = 0; i < pattern.length(); i++)
     {

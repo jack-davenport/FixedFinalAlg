@@ -9,17 +9,17 @@ using namespace std;
 
 vector<int> trivial(string text, string pattern);
 vector<int> rabinKarpSearch(string text, string pattern, int primeNumber);
-void outputToFile(fstream& output, vector<int> RK, vector<int> triv, clock_t rkTime, clock_t trivialTime);
+void outputToFile(fstream& output, vector<int>& RK, vector<int>& triv, clock_t rkTime, clock_t trivialTime, bool showPatternLocation);
 
 int main(int argc, char* argv[])
 {
-    if(argc < 2)
+    if(argc < 3)//if not enough arguments passed in
     {
         cout << "Not enough arguments provided" << endl;
         return -1;
     }
 
-    ifstream ifs(argv[1]);
+    ifstream ifs(argv[1]);//if stream to extract data from text
     string text( (std::istreambuf_iterator<char>(ifs) ),
                  (std::istreambuf_iterator<char>()    ) );//puts the read in textfile into variable
 
@@ -42,7 +42,10 @@ int main(int argc, char* argv[])
         cout << "Didn't open output file" << endl;
         return -1;
     }
-    outputToFile(output, RK, triv, startRK, startTrivial);//sends the info into function to be formatted for the output file and then added
+
+
+    //to show indices or not change last val to true to show or false to not show
+    outputToFile(output, RK, triv, startRK, startTrivial, false);//sends the info into function to be formatted for the output file and then added
 
     return 0;
 }
@@ -103,31 +106,37 @@ vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
     return patternMatches;
 }
 
-void outputToFile(fstream& output, vector<int> RK, vector<int> triv, clock_t rkTime, clock_t trivialTime)
+void outputToFile(fstream& output, vector<int>& RK, vector<int>& triv, clock_t rkTime, clock_t trivialTime, bool showPatternLocation)
 {
     output << "Trivial" << endl;//labels this section as trivial info
     output << "Trivial Time: " <<trivialTime / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;//adds the time of function to output
     output << "Instances of pattern found: " << triv.size() << endl; //how many pattern matches in text
 
-    for(int i = 0; i < triv.size() - 1; i++)//prints the index the text matches the pattern at for triival
+    if(showPatternLocation)
     {
-        output << triv.at(i) << ", ";
-        if(i % 20 == 0 && i != 0)
-            output << endl;
+        for(int i = 0; i < triv.size() - 1; i++)//prints the index the text matches the pattern at for triival
+        {
+            output << triv.at(i) << ", ";
+            if(i % 20 == 0 && i != 0)
+                output << endl;
+        }
+        output << triv.at(triv.size() - 1) << endl;
     }
-    output << triv.at(triv.size() - 1) << endl;
+
 
     output << "Rabin-Karp" << endl;//labels this section as rabin karp
     output << "Rabin-Karp Time: " << rkTime / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;//adds the timing of rk function to the output
     output << "Instances of pattern found: " << RK.size() << endl;//adds how many pattern matches in the text were found
 
-    for(int i = 0; i < RK.size() - 1; i++)//prints the index the text matches the pattern at for rabin-karp
+    if(showPatternLocation)
     {
-        output << RK.at(i) << ", ";
-        if(i % 20 == 0 && i != 0)
-            output << endl;
+        for(int i = 0; i < RK.size() - 1; i++)//prints the index the text matches the pattern at for rabin-karp
+        {
+            output << RK.at(i) << ", ";
+            if(i % 20 == 0 && i != 0)
+                output << endl;
+        }
+        output << RK.at(RK.size() - 1) << endl;
     }
-    output << RK.at(RK.size() - 1) << endl;
-
     output.close();
 }

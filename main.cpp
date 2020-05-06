@@ -11,7 +11,7 @@ using namespace std;
 vector<int> trivial(string text, string pattern);//pass in the text and looks for every location of pattern using trivial search
 vector<int> rabinKarpSearch(string text, string pattern, int primeNumber);//uses rabin karp taking in prime nunmber text and pattern to look for every pattern matchw
 void outputToFile(fstream& output, vector<int>& rkVector, vector<int>& trivialVector, clock_t rkTime, clock_t trivialTime, bool showPatternLocation, string inputFile, string pattern);
-void readControlFile(fstream& ctrl);
+void readControlFile(fstream& ctrl, string out);
 
 int main(int argc, char* argv[])
 {
@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
         cout << "Couldn't open control" << endl;
         return -1;
     }
-    readControlFile(ctrl);//call function to read through the file
+    readControlFile(ctrl, argv[2]);//call function to read through the file
 
     cout << "i reach end" << endl;
     return 0;
@@ -128,10 +128,10 @@ void outputToFile(fstream& output, vector<int>& rkVector, vector<int>& trivialVe
     }
 }
 
-void readControlFile(fstream& ctrl)//takes in fstream control file
+void readControlFile(fstream& ctrl, string out)//takes in fstream control file
 {
     fstream output;//declares output.txt
-    output.open("output.txt", ios::out);//opens output file
+    output.open(out, ios::out);//opens output file
     if(!output)//if cant open the output file
     {
         cout << "couldn't open" <<endl;

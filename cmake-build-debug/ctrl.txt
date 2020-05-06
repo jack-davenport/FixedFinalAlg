@@ -1,0 +1,10 @@
+3
+Pride.txt
+people
+1
+sample.txt
+paragraph
+1
+shakespeare.txt
+thou
+0

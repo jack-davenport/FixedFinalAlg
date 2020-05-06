@@ -89,5 +89,14 @@
 		<Unit filename="/cygdrive/c/Users/jackd/Documents/FixedFinalAlg/Pride.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
+		<Unit filename="/cygdrive/c/Users/jackd/Documents/FixedFinalAlg/ctrl.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/jackd/Documents/FixedFinalAlg/sample.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/jackd/Documents/FixedFinalAlg/shakespeare.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
 	</Project>
 </CodeBlocks_project_file>

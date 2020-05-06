@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <cstring>
 #include <fstream>
 #include <ctime>
@@ -9,47 +10,25 @@ using namespace std;
 
 vector<int> trivial(string text, string pattern);//pass in the text and looks for every location of pattern using trivial search
 vector<int> rabinKarpSearch(string text, string pattern, int primeNumber);//uses rabin karp taking in prime nunmber text and pattern to look for every pattern matchw
-void outputToFile(fstream& output, vector<int>& RK, vector<int>& triv, clock_t rkTime, clock_t trivialTime, bool showPatternLocation);
+void outputToFile(fstream& output, vector<int>& rkVector, vector<int>& trivialVector, clock_t rkTime, clock_t trivialTime, bool showPatternLocation, string inputFile, string pattern);
+void readControlFile(fstream& ctrl);
 
 int main(int argc, char* argv[])
 {
-    if(argc < 3)//if not enough arguments passed in
+    if(argc < 2)//if not enough arguments passed in
     {
         cout << "Not enough arguments provided" << endl;
         return -1;
     }
 
-    ifstream ifs(argv[1]);//if stream to extract data from text
-    string text( (std::istreambuf_iterator<char>(ifs) ),
-                 (std::istreambuf_iterator<char>()    ) );//puts the read in textfile into variable
-
-
-    string pattern = "pride";//can enter the pattern you want to search for here
-
-
-    std::clock_t startTrivial;
-    startTrivial = std::clock();//used to time the trivial function
-    vector<int> triv = trivial(text, pattern);//runs the trivial function and saves the returned vector locally in triv
-    startTrivial = std:: clock() - startTrivial;//calculates time of the function
-
-
-
-    std::clock_t startRK;//used to time the rabin-karp function
-    startRK = std::clock();
-    vector<int> RK = rabinKarpSearch(text, pattern, 101);//runs the rabinKarpsearch and saves the returned vector locally in RK
-    startRK = std::clock() - startRK;//gets the time of the functio
-
-    fstream output;//output fstream
-    output.open(argv[2], ios::out);//opens output file
-    if(!output)//if cant open the output file
+    fstream ctrl;//file that you enter the text files u want to test
+    ctrl.open(argv[1], ios::in);//open as input
+    if(!ctrl)//check if opened
     {
-        cout << "Didn't open output file" << endl;
+        cout << "Couldn't open control" << endl;
         return -1;
     }
-
-
-    //to show indices or not change last val to true to show or false to not show
-    outputToFile(output, RK, triv, startRK, startTrivial, false);//sends the info into function to be formatted for the output file and then added
+    readControlFile(ctrl);//call function to read through the file
 
     return 0;
 }
@@ -69,30 +48,22 @@ vector<int> trivial(string text, string pattern)
     return indexOfMatches;//returns the indices
 }
 
-
-
 vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
 {
     vector<int> patternMatches;//vector holding indices of the pattern matches
     int chars = 256;//number of characters in the alphabet
     int pHashVal = 0;//pattern hash value
     int subStringHashVal = 0;//substring hash value initialize to 0
-
-
-
+    int hash = 1;
 
     for(int i = 0; i < pattern.length(); i++)
     {
         pHashVal = (chars * pHashVal + pattern.at(i)) % primeNumber;//determing pattern hash val
         subStringHashVal = (chars * subStringHashVal +  text.at(i)) % primeNumber; //d/etermine prime read hash val
+        if(i < pattern.length() - 1)
+            hash = (chars * hash) % primeNumber;//hash = chars * hash % primenumber does a for loop instead of power function bc that will lead to a overflow
     }
 
-    int hash = 1;//hash started at 1
-
-    for(int i = 0; i < pattern.length() - 1; i++)
-    {
-        hash = (chars * hash) % primeNumber;//hash = chars * hash % primenumber does a for loop instead of power function bc that will lead to a overflow
-    }
 
     for(int i = 0; i <= text.length() - pattern.length(); i++)//iterate through length of text - length of pattern because rolling hash we dont iterate through each
     {
@@ -121,37 +92,105 @@ vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
 
 
 
-void outputToFile(fstream& output, vector<int>& RK, vector<int>& triv, clock_t rkTime, clock_t trivialTime, bool showPatternLocation)
+void outputToFile(fstream& output, vector<int>& rkVector, vector<int>& trivialVector, clock_t rkTime, clock_t trivialTime, bool showPatternLocation, string inputFile, string pattern)
 {
-    output << "Trivial" << endl;//labels this section as trivial info
+    output << endl << "Input File: " << inputFile  << " Searching for: " << pattern << endl;
+    output << endl <<"Trivial" << endl;//labels this section as trivial info
     output << "Trivial Time: " <<trivialTime / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;//adds the time of function to output
-    output << "Instances of pattern found: " << triv.size() << endl; //how many pattern matches in text
+    output << "Instances of pattern found: " << trivialVector.size() << endl; //how many pattern matches in text
 
-    if(showPatternLocation)
+    if(showPatternLocation)//if wanted to show the indices
     {
-        for(int i = 0; i < triv.size() - 1; i++)//prints the index the text matches the pattern at for triival
+        for(int i = 0; i < trivialVector.size() - 1; i++)//prints the index the text matches the pattern at for triival
         {
-            output << triv.at(i) << ", ";
+            output << trivialVector.at(i) << ", ";
             if(i % 20 == 0 && i != 0)
                 output << endl;
         }
-        output << triv.at(triv.size() - 1) << endl;
+        output << trivialVector.at(trivialVector.size() - 1) << endl;
     }
 
 
-    output << "Rabin-Karp" << endl;//labels this section as rabin karp
+    output << endl << "Rabin-Karp" << endl;//labels this section as rabin karp
     output << "Rabin-Karp Time: " << rkTime / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;//adds the timing of rk function to the output
-    output << "Instances of pattern found: " << RK.size() << endl;//adds how many pattern matches in the text were found
+    output << "Instances of pattern found: " << rkVector.size() << endl;//adds how many pattern matches in the text were found
 
-    if(showPatternLocation)
+    if(showPatternLocation)//shows indices or not depending on bool
     {
-        for(int i = 0; i < RK.size() - 1; i++)//prints the index the text matches the pattern at for rabin-karp
+        for(int i = 0; i < rkVector.size() - 1; i++)//prints the index the text matches the pattern at for rabin-karp
         {
-            output << RK.at(i) << ", ";
+            output << rkVector.at(i) << ", ";
             if(i % 20 == 0 && i != 0)
                 output << endl;
         }
-        output << RK.at(RK.size() - 1) << endl;
+        output << rkVector.at(rkVector.size() - 1) << endl;
     }
+}
+
+void readControlFile(fstream& ctrl)//takes in fstream control file
+{
+    fstream output;//declares output.txt
+    output.open("output.txt", ios::out);//opens output file
+    if(!output)//if cant open the output file
+    {
+        cout << "couldn't open" <<endl;
+        throw "Couldn't open output";
+    }
+
+    int counter = 0;//counter for while loop instead of eof
+    int numberOfInputFiles;//declares int to be read in
+    ctrl >> numberOfInputFiles;//reads in first val from control file
+    ctrl.ignore(60,'\n');//skips over \r that was appearing
+
+    string inputFileName;//declares string to be used as name of input files
+    getline(ctrl, inputFileName);//extract string from ctrl
+    inputFileName.erase(std::remove(inputFileName.begin(), inputFileName.end(), '\r'));//removes \r from it
+
+    string pattern;//string for the pattern
+    getline(ctrl, pattern);//reads in pattern from ctrl
+    pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//removes \r
+
+    int showLocationsOfMatches;//int that used as a bool on whether to show all locations of matches to pattern
+    ctrl >> showLocationsOfMatches;//reads in int
+
+    ifstream ifs(inputFileName);//if stream to extract data from text
+    string text;//declares string text
+    text.assign( (std::istreambuf_iterator<char>(ifs) ),
+                 (std::istreambuf_iterator<char>()    ) );//puts the read in textfile into variable
+
+                 //all these are before the while loop to do a prime read to fix errors that can happen
+    while(counter < numberOfInputFiles)
+    {
+        counter++;//increments counter
+
+        std::clock_t startTrivial;
+        startTrivial = std::clock();//used to time the trivial function
+        vector<int> trivialVector= trivial(text, pattern);//runs the trivial function and saves the returned vector locally in triv
+        startTrivial = std:: clock() - startTrivial;//calculates time of the function
+
+        std::clock_t rkTime;//used to time the rabin-karp function
+        rkTime = std::clock();
+        vector<int> rkVector = rabinKarpSearch(text, pattern, 263);//runs the rabinKarpsearch and saves the returned vector locally in rkVector
+        rkTime = std::clock() - rkTime;//gets the time of the functio
+
+        //to show indices or not change last val to true to show or false to not show
+        outputToFile(output, rkVector, trivialVector, rkTime, startTrivial, showLocationsOfMatches, inputFileName, pattern);
+
+        ctrl.ignore(60,'\n'); //ignores \r thats left over from prime read and any subsequent reads
+        getline(ctrl, inputFileName);//gets new input file name
+        inputFileName.erase(std::remove(inputFileName.begin(), inputFileName.end(), '\r'));//gets rid of \r
+
+        getline(ctrl, pattern);//gets new pattern from ctrl
+        pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//takes pattern and removes the /r
+
+        ctrl >> showLocationsOfMatches;//reads in bool
+        ifs.close();//closes file
+        ifs.clear();//allows ifs to be reassigned to new file
+        ifs.open(inputFileName, ios::in);//opens new file
+        text.assign( (std::istreambuf_iterator<char>(ifs) ),
+                     (std::istreambuf_iterator<char>()    ) );//puts the read in textfile into variable
+    }
+
     output.close();
 }
+

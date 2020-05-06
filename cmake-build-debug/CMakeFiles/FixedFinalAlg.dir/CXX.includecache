@@ -13,6 +13,8 @@ string
 -
 vector
 -
+algorithm
+-
 cstring
 -
 fstream

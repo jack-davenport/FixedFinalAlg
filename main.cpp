@@ -30,6 +30,7 @@ int main(int argc, char* argv[])
     }
     readControlFile(ctrl);//call function to read through the file
 
+    cout << "i reach end" << endl;
     return 0;
 }
 
@@ -176,19 +177,23 @@ void readControlFile(fstream& ctrl)//takes in fstream control file
         //to show indices or not change last val to true to show or false to not show
         outputToFile(output, rkVector, trivialVector, rkTime, startTrivial, showLocationsOfMatches, inputFileName, pattern);
 
-        ctrl.ignore(60,'\n'); //ignores \r thats left over from prime read and any subsequent reads
-        getline(ctrl, inputFileName);//gets new input file name
-        inputFileName.erase(std::remove(inputFileName.begin(), inputFileName.end(), '\r'));//gets rid of \r
+        if(counter != numberOfInputFiles) //added because ran into problems where it was trying to read an empty file and crashing
+        {
+            ctrl.ignore(60,'\n'); //ignores \r thats left over from prime read and any subsequent reads
+            getline(ctrl, inputFileName);//gets new input file name
+            inputFileName.erase(std::remove(inputFileName.begin(), inputFileName.end(), '\r'));//gets rid of \r
 
-        getline(ctrl, pattern);//gets new pattern from ctrl
-        pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//takes pattern and removes the /r
+            getline(ctrl, pattern);//gets new pattern from ctrl
+            pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//takes pattern and removes the /r
 
-        ctrl >> showLocationsOfMatches;//reads in bool
-        ifs.close();//closes file
-        ifs.clear();//allows ifs to be reassigned to new file
-        ifs.open(inputFileName, ios::in);//opens new file
-        text.assign( (std::istreambuf_iterator<char>(ifs) ),
-                     (std::istreambuf_iterator<char>()    ) );//puts the read in textfile into variable
+            ctrl >> showLocationsOfMatches;//reads in bool
+            ifs.close();//closes file
+            ifs.clear();//allows ifs to be reassigned to new file
+            ifs.open(inputFileName, ios::in);//opens new file
+            text.assign( (std::istreambuf_iterator<char>(ifs) ),
+                         (std::istreambuf_iterator<char>()    ) );//puts the read in textfile into variable
+        }
+
     }
 
     output.close();

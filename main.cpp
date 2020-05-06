@@ -15,11 +15,11 @@ void readControlFile(fstream& ctrl);
 
 int main(int argc, char* argv[])
 {
-    if(argc < 2)//if not enough arguments passed in
-    {
-        cout << "Not enough arguments provided" << endl;
-        return -1;
-    }
+//    if(argc < 2)//if not enough arguments passed in
+//    {
+//        cout << "Not enough arguments provided" << endl;
+//        return -1;
+//    }
 
     fstream ctrl;//file that you enter the text files u want to test
     ctrl.open(argv[1], ios::in);//open as input

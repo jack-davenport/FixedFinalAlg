@@ -1,9 +1,9 @@
-name: 20s_pa03_jackd18
+name: FixedFinalAlg
 
 on: [push]
 
 env:
-  EXE_NAME: 20s_pa03_jackd18
+  EXE_NAME: FixedFinalAlg
   ### ***** Students!  Put the name of the input files and output files here.
   ###   List them in the order that they need to appear in Argv param of main.
   ###   Output Files will follow input files

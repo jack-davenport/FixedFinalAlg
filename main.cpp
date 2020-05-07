@@ -15,12 +15,12 @@ void readControlFile(fstream& ctrl, string out);
 
 int main(int argc, char* argv[])
 {
-    cout << "gets to the front" << endl;
-//    if(argc < 2)//if not enough arguments passed in
-//    {
-//        cout << "Not enough arguments provided" << endl;
-//        return -1;
-//    }
+
+    if(argc < 2)//if not enough arguments passed in
+    {
+        cout << "Not enough arguments provided" << endl;
+        return -1;
+    }
 
     fstream ctrl;//file that you enter the text files u want to test
     ctrl.open(argv[1], ios::in);//open as input
@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
         return -1;
     }
     cout << "read control file before" << endl;
-    readControlFile(ctrl, "output.txt");//call function to read through the file
+    readControlFile(ctrl, argv[2]);//call function to read through the file
 
     ctrl.close();
     cout << "i reach end" << endl;

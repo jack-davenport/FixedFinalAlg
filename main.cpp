@@ -110,11 +110,13 @@ void readControlFile(fstream& ctrl, string out)//takes in fstream control file
         throw "Couldn't open output";
     }
 
+    cout << "output opened" <<endl;
     int counter = 0;//counter for while loop instead of eof
     int numberOfInputFiles;//declares int to be read in
     ctrl >> numberOfInputFiles;//reads in first val from control file
     ctrl.ignore(60,'\n');//skips over \r that was appearing
 
+    cout << "after ignore" << endl;
     string inputFileName;//declares string to be used as name of input files
     getline(ctrl, inputFileName);//extract string from ctrl
     inputFileName.erase(std::remove(inputFileName.begin(), inputFileName.end(), '\r'));//removes \r from it
@@ -123,6 +125,7 @@ void readControlFile(fstream& ctrl, string out)//takes in fstream control file
     getline(ctrl, pattern);//reads in pattern from ctrl
     pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//removes \r
 
+    cout << "before location of matches" << endl;
     int showLocationsOfMatches;//int that used as a bool on whether to show all locations of matches to pattern
     ctrl >> showLocationsOfMatches;//reads in int
 

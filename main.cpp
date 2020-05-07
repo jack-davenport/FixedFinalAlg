@@ -114,7 +114,7 @@ void readControlFile(fstream& ctrl, string out)//takes in fstream control file
     int counter = 0;//counter for while loop instead of eof
     int numberOfInputFiles;//declares int to be read in
     ctrl >> numberOfInputFiles;//reads in first val from control file
-  //  ctrl.ignore(60,'\n');//skips over \r that was appearing
+    ctrl.ignore(60,'\n');//skips over \r that was appearing
 
     cout << "after ignore" << endl;
     string inputFileName;//declares string to be used as name of input files
@@ -159,7 +159,7 @@ void readControlFile(fstream& ctrl, string out)//takes in fstream control file
 
         if(counter != numberOfInputFiles) //added because ran into problems where it was trying to read an empty file and crashing
         {
-        //    ctrl.ignore(60,'\n'); //ignores \r thats left over from prime read and any subsequent reads
+            ctrl.ignore(60,'\n'); //ignores \r thats left over from prime read and any subsequent reads
             getline(ctrl, inputFileName);//gets new input file name
        //     inputFileName.erase(std::remove(inputFileName.begin(), inputFileName.end(), '\r'));//gets rid of \r
 

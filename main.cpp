@@ -120,7 +120,7 @@ void readControlFile(fstream& ctrl, string out)//takes in fstream control file
     string inputFileName;//declares string to be used as name of input files
     getline(ctrl, inputFileName);//extract string from ctrl
     cout << "Before erase" << endl;
-    inputFileName.erase(std::remove(inputFileName.begin(), inputFileName.end(), '\r'));//removes \r from it
+    inputFileName.erase(remove(inputFileName.begin(), inputFileName.end(), '\r'));//removes \r from it
     cout << "After erase" << endl;
 
     string pattern;//string for the pattern

@@ -15,6 +15,7 @@ void readControlFile(fstream& ctrl, string out);
 
 int main(int argc, char* argv[])
 {
+    cout << "gets to the front" << endl;
 //    if(argc < 2)//if not enough arguments passed in
 //    {
 //        cout << "Not enough arguments provided" << endl;

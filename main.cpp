@@ -15,7 +15,6 @@ void readControlFile(fstream& ctrl, string out);
 
 int main(int argc, char* argv[])
 {
-
     if(argc < 2)//if not enough arguments passed in
     {
         cout << "Not enough arguments provided" << endl;
@@ -30,11 +29,11 @@ int main(int argc, char* argv[])
         cout << "Couldn't open control" << endl;
         return -1;
     }
-    cout << "read control file before" << endl;
+
     readControlFile(ctrl, argv[2]);//call function to read through the file
 
     ctrl.close();
-    cout << "i reach end" << endl;
+
     return 0;
 }
 
@@ -67,6 +66,7 @@ vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
     {
         pHashVal = (chars * pHashVal + pattern.at(i)) % primeNumber;//determing pattern hash val
         subStringHashVal = (chars * subStringHashVal +  text.at(i)) % primeNumber; //d/etermine prime read hash val
+
         if(i < pattern.length() - 1)
             hash = (chars * hash) % primeNumber;//hash = chars * hash % primenumber does a for loop instead of power function bc that will lead to a overflow
     }
@@ -99,10 +99,9 @@ vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
 
 void readControlFile(fstream& ctrl, string out)//takes in fstream control file
 {
-    int f = 0;
 
-    cout << "Into control file" << endl;
     fstream output;//declares output.txt
+
     output.open(out, ios::out);//opens output file
     if(!output)//if cant open the output file
     {
@@ -110,38 +109,29 @@ void readControlFile(fstream& ctrl, string out)//takes in fstream control file
         throw "Couldn't open output";
     }
 
-    cout << "output opened" <<endl;
+
     int counter = 0;//counter for while loop instead of eof
     int numberOfInputFiles;//declares int to be read in
     ctrl >> numberOfInputFiles;//reads in first val from control file
-    ctrl.ignore(60,'\n');//skips over \r that was appearing
+    ctrl.ignore(60,'\n');//skips over \n that was appearing
 
-    cout << "after ignore" << endl;
     string inputFileName;//declares string to be used as name of input files
     getline(ctrl, inputFileName);//extract string from ctrl
-    cout << "Before erase" << endl;
-    //inputFileName.erase(remove(inputFileName.begin(), inputFileName.end(), '\r'));//removes \r from it
-    cout << "After erase" << endl;
 
     string pattern;//string for the pattern
     getline(ctrl, pattern);//reads in pattern from ctrl
-   // pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//removes \r
 
-    cout << "before location of matches" << endl;
     int showLocationsOfMatches;//int that used as a bool on whether to show all locations of matches to pattern
     ctrl >> showLocationsOfMatches;//reads in int
 
-    cout << "before ifstream" << endl;
     ifstream ifs(inputFileName);//if stream to extract data from text
     string text;//declares string text
     text.assign( (std::istreambuf_iterator<char>(ifs) ),
                  (std::istreambuf_iterator<char>()    ) );//puts the read in textfile into variable
 
-                 cout << "Before while" << endl;
     //all these are before the while loop to do a prime read to fix errors that can happen
     while(counter < numberOfInputFiles)
     {
-        cout << "Got to while loop " << f << endl;
         counter++;//increments counter
 
         std::clock_t startTrivial;
@@ -161,12 +151,11 @@ void readControlFile(fstream& ctrl, string out)//takes in fstream control file
         {
             ctrl.ignore(60,'\n'); //ignores \r thats left over from prime read and any subsequent reads
             getline(ctrl, inputFileName);//gets new input file name
-       //     inputFileName.erase(std::remove(inputFileName.begin(), inputFileName.end(), '\r'));//gets rid of \r
 
             getline(ctrl, pattern);//gets new pattern from ctrl
-     //       pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//takes pattern and removes the /r
 
             ctrl >> showLocationsOfMatches;//reads in bool
+
             ifs.close();//closes file
             ifs.clear();//allows ifs to be reassigned to new file
             ifs.open(inputFileName, ios::in);//opens new file
@@ -175,12 +164,11 @@ void readControlFile(fstream& ctrl, string out)//takes in fstream control file
         }
         else
         {
-            ifs.close();
+            ifs.close();//closes ifstream
         }
-
     }
 
-    output.close();
+    output.close();//closes the output file fstream
 }
 
 void outputToFile(fstream& output, vector<int>& rkVector, vector<int>& trivialVector, clock_t rkTime, clock_t trivialTime, bool showPatternLocation, string inputFile, string pattern)

@@ -24,11 +24,13 @@ int main(int argc, char* argv[])
 
     fstream ctrl;//file that you enter the text files u want to test
     ctrl.open(argv[1], ios::in);//open as input
+
     if(!ctrl)//check if opened
     {
         cout << "Couldn't open control" << endl;
         return -1;
     }
+    cout << "read control file before" << endl;
     readControlFile(ctrl, "output.txt");//call function to read through the file
 
     ctrl.close();

@@ -101,6 +101,7 @@ void readControlFile(fstream& ctrl, string out)//takes in fstream control file
 {
     int f = 0;
 
+    cout << "Into control file" << endl;
     fstream output;//declares output.txt
     output.open(out, ios::out);//opens output file
     if(!output)//if cant open the output file
@@ -125,11 +126,13 @@ void readControlFile(fstream& ctrl, string out)//takes in fstream control file
     int showLocationsOfMatches;//int that used as a bool on whether to show all locations of matches to pattern
     ctrl >> showLocationsOfMatches;//reads in int
 
+    cout << "before ifstream" << endl;
     ifstream ifs(inputFileName);//if stream to extract data from text
     string text;//declares string text
     text.assign( (std::istreambuf_iterator<char>(ifs) ),
                  (std::istreambuf_iterator<char>()    ) );//puts the read in textfile into variable
 
+                 cout << "Before while" << endl;
     //all these are before the while loop to do a prime read to fix errors that can happen
     while(counter < numberOfInputFiles)
     {

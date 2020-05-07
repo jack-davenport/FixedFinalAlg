@@ -1,18 +1,4 @@
 C:\Users\jackd\.CLion2019.3\system\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /cygdrive/c/Users/jackd/Documents/FixedFinalAlg
-CMake Error: File /cygdrive/c/Users/jackd/Documents/FixedFinalAlg/ctrl.txt does not exist.
-CMake Error at CMakeLists.txt:10 (configure_file):
-  configure_file Problem configuring file
-
-
-CMake Error: File /cygdrive/c/Users/jackd/Documents/FixedFinalAlg/sample.txt does not exist.
-CMake Error at CMakeLists.txt:10 (configure_file):
-  configure_file Problem configuring file
-
-
-CMake Error: File /cygdrive/c/Users/jackd/Documents/FixedFinalAlg/shakespeare.txt does not exist.
-CMake Error at CMakeLists.txt:10 (configure_file):
-  configure_file Problem configuring file
-
-
--- Configuring incomplete, errors occurred!
-See also "/cygdrive/c/Users/jackd/Documents/FixedFinalAlg/cmake-build-debug/CMakeFiles/CMakeOutput.log".
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /cygdrive/c/Users/jackd/Documents/FixedFinalAlg/cmake-build-debug

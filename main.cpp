@@ -28,11 +28,14 @@ int main(int argc, char* argv[])
         cout << "Couldn't open control" << endl;
         return -1;
     }
-    readControlFile(ctrl, argv[2]);//call function to read through the file
+    readControlFile(ctrl, "output.txt");//call function to read through the file
 
+    ctrl.close();
     cout << "i reach end" << endl;
     return 0;
 }
+
+
 
 vector<int> trivial(string text, string pattern)
 {
@@ -91,7 +94,80 @@ vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
     return patternMatches;
 }
 
+void readControlFile(fstream& ctrl, string out)//takes in fstream control file
+{
+    fstream output;//declares output.txt
+    output.open(out, ios::out);//opens output file
+    if(!output)//if cant open the output file
+    {
+        cout << "couldn't open" <<endl;
+        throw "Couldn't open output";
+    }
 
+    int counter = 0;//counter for while loop instead of eof
+    int numberOfInputFiles;//declares int to be read in
+    ctrl >> numberOfInputFiles;//reads in first val from control file
+    ctrl.ignore(60,'\n');//skips over \r that was appearing
+
+    string inputFileName;//declares string to be used as name of input files
+    getline(ctrl, inputFileName);//extract string from ctrl
+    inputFileName.erase(std::remove(inputFileName.begin(), inputFileName.end(), '\r'));//removes \r from it
+
+    string pattern;//string for the pattern
+    getline(ctrl, pattern);//reads in pattern from ctrl
+    pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//removes \r
+
+    int showLocationsOfMatches;//int that used as a bool on whether to show all locations of matches to pattern
+    ctrl >> showLocationsOfMatches;//reads in int
+
+    ifstream ifs(inputFileName);//if stream to extract data from text
+    string text;//declares string text
+    text.assign( (std::istreambuf_iterator<char>(ifs) ),
+                 (std::istreambuf_iterator<char>()    ) );//puts the read in textfile into variable
+
+    //all these are before the while loop to do a prime read to fix errors that can happen
+    while(counter < numberOfInputFiles)
+    {
+        counter++;//increments counter
+
+        std::clock_t startTrivial;
+        startTrivial = std::clock();//used to time the trivial function
+        vector<int> trivialVector= trivial(text, pattern);//runs the trivial function and saves the returned vector locally in triv
+        startTrivial = std:: clock() - startTrivial;//calculates time of the function
+
+        std::clock_t rkTime;//used to time the rabin-karp function
+        rkTime = std::clock();
+        vector<int> rkVector = rabinKarpSearch(text, pattern, 263);//runs the rabinKarpsearch and saves the returned vector locally in rkVector
+        rkTime = std::clock() - rkTime;//gets the time of the functio
+
+        //to show indices or not change last val to true to show or false to not show
+        outputToFile(output, rkVector, trivialVector, rkTime, startTrivial, showLocationsOfMatches, inputFileName, pattern);
+
+        if(counter != numberOfInputFiles) //added because ran into problems where it was trying to read an empty file and crashing
+        {
+            ctrl.ignore(60,'\n'); //ignores \r thats left over from prime read and any subsequent reads
+            getline(ctrl, inputFileName);//gets new input file name
+            inputFileName.erase(std::remove(inputFileName.begin(), inputFileName.end(), '\r'));//gets rid of \r
+
+            getline(ctrl, pattern);//gets new pattern from ctrl
+            pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//takes pattern and removes the /r
+
+            ctrl >> showLocationsOfMatches;//reads in bool
+            ifs.close();//closes file
+            ifs.clear();//allows ifs to be reassigned to new file
+            ifs.open(inputFileName, ios::in);//opens new file
+            text.assign( (std::istreambuf_iterator<char>(ifs) ),
+                         (std::istreambuf_iterator<char>()    ) );//puts the read in textfile into variable
+        }
+        else
+        {
+            ifs.close();
+        }
+
+    }
+
+    output.close();
+}
 
 void outputToFile(fstream& output, vector<int>& rkVector, vector<int>& trivialVector, clock_t rkTime, clock_t trivialTime, bool showPatternLocation, string inputFile, string pattern)
 {
@@ -128,74 +204,5 @@ void outputToFile(fstream& output, vector<int>& rkVector, vector<int>& trivialVe
     }
 }
 
-void readControlFile(fstream& ctrl, string out)//takes in fstream control file
-{
-    fstream output;//declares output.txt
-    output.open(out, ios::out);//opens output file
-    if(!output)//if cant open the output file
-    {
-        cout << "couldn't open" <<endl;
-        throw "Couldn't open output";
-    }
 
-    int counter = 0;//counter for while loop instead of eof
-    int numberOfInputFiles;//declares int to be read in
-    ctrl >> numberOfInputFiles;//reads in first val from control file
-    ctrl.ignore(60,'\n');//skips over \r that was appearing
-
-    string inputFileName;//declares string to be used as name of input files
-    getline(ctrl, inputFileName);//extract string from ctrl
-    inputFileName.erase(std::remove(inputFileName.begin(), inputFileName.end(), '\r'));//removes \r from it
-
-    string pattern;//string for the pattern
-    getline(ctrl, pattern);//reads in pattern from ctrl
-    pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//removes \r
-
-    int showLocationsOfMatches;//int that used as a bool on whether to show all locations of matches to pattern
-    ctrl >> showLocationsOfMatches;//reads in int
-
-    ifstream ifs(inputFileName);//if stream to extract data from text
-    string text;//declares string text
-    text.assign( (std::istreambuf_iterator<char>(ifs) ),
-                 (std::istreambuf_iterator<char>()    ) );//puts the read in textfile into variable
-
-                 //all these are before the while loop to do a prime read to fix errors that can happen
-    while(counter < numberOfInputFiles)
-    {
-        counter++;//increments counter
-
-        std::clock_t startTrivial;
-        startTrivial = std::clock();//used to time the trivial function
-        vector<int> trivialVector= trivial(text, pattern);//runs the trivial function and saves the returned vector locally in triv
-        startTrivial = std:: clock() - startTrivial;//calculates time of the function
-
-        std::clock_t rkTime;//used to time the rabin-karp function
-        rkTime = std::clock();
-        vector<int> rkVector = rabinKarpSearch(text, pattern, 263);//runs the rabinKarpsearch and saves the returned vector locally in rkVector
-        rkTime = std::clock() - rkTime;//gets the time of the functio
-
-        //to show indices or not change last val to true to show or false to not show
-        outputToFile(output, rkVector, trivialVector, rkTime, startTrivial, showLocationsOfMatches, inputFileName, pattern);
-
-        if(counter != numberOfInputFiles) //added because ran into problems where it was trying to read an empty file and crashing
-        {
-            ctrl.ignore(60,'\n'); //ignores \r thats left over from prime read and any subsequent reads
-            getline(ctrl, inputFileName);//gets new input file name
-            inputFileName.erase(std::remove(inputFileName.begin(), inputFileName.end(), '\r'));//gets rid of \r
-
-            getline(ctrl, pattern);//gets new pattern from ctrl
-            pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//takes pattern and removes the /r
-
-            ctrl >> showLocationsOfMatches;//reads in bool
-            ifs.close();//closes file
-            ifs.clear();//allows ifs to be reassigned to new file
-            ifs.open(inputFileName, ios::in);//opens new file
-            text.assign( (std::istreambuf_iterator<char>(ifs) ),
-                         (std::istreambuf_iterator<char>()    ) );//puts the read in textfile into variable
-        }
-
-    }
-
-    output.close();
-}
 

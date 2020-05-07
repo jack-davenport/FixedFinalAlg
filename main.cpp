@@ -114,18 +114,18 @@ void readControlFile(fstream& ctrl, string out)//takes in fstream control file
     int counter = 0;//counter for while loop instead of eof
     int numberOfInputFiles;//declares int to be read in
     ctrl >> numberOfInputFiles;//reads in first val from control file
-    ctrl.ignore(60,'\n');//skips over \r that was appearing
+  //  ctrl.ignore(60,'\n');//skips over \r that was appearing
 
     cout << "after ignore" << endl;
     string inputFileName;//declares string to be used as name of input files
     getline(ctrl, inputFileName);//extract string from ctrl
     cout << "Before erase" << endl;
-    inputFileName.erase(remove(inputFileName.begin(), inputFileName.end(), '\r'));//removes \r from it
+    //inputFileName.erase(remove(inputFileName.begin(), inputFileName.end(), '\r'));//removes \r from it
     cout << "After erase" << endl;
 
     string pattern;//string for the pattern
     getline(ctrl, pattern);//reads in pattern from ctrl
-    pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//removes \r
+   // pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//removes \r
 
     cout << "before location of matches" << endl;
     int showLocationsOfMatches;//int that used as a bool on whether to show all locations of matches to pattern
@@ -159,12 +159,12 @@ void readControlFile(fstream& ctrl, string out)//takes in fstream control file
 
         if(counter != numberOfInputFiles) //added because ran into problems where it was trying to read an empty file and crashing
         {
-            ctrl.ignore(60,'\n'); //ignores \r thats left over from prime read and any subsequent reads
+        //    ctrl.ignore(60,'\n'); //ignores \r thats left over from prime read and any subsequent reads
             getline(ctrl, inputFileName);//gets new input file name
-            inputFileName.erase(std::remove(inputFileName.begin(), inputFileName.end(), '\r'));//gets rid of \r
+       //     inputFileName.erase(std::remove(inputFileName.begin(), inputFileName.end(), '\r'));//gets rid of \r
 
             getline(ctrl, pattern);//gets new pattern from ctrl
-            pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//takes pattern and removes the /r
+     //       pattern.erase(std::remove(pattern.begin(), pattern.end(), '\r'));//takes pattern and removes the /r
 
             ctrl >> showLocationsOfMatches;//reads in bool
             ifs.close();//closes file

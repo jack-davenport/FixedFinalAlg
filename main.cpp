@@ -72,7 +72,7 @@ vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
     }
 
 
-    for(int i = 0; i <= text.length() - pattern.length(); i++)//iterate through length of text - length of pattern because rolling hash we dont iterate through each
+    for(int i = 0; i < text.length() - pattern.length() + 1; i++)//iterate through length of text - length of pattern because rolling hash we dont iterate through each
     {
         if(pHashVal == subStringHashVal)//check if rolling hash value ='s the pattern hash value
         {
@@ -84,7 +84,7 @@ vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
 
         if(i < text.length() - pattern.length())
         {
-            //subtract the value of text[i] - hash creates a rolling hash
+            //subtract the value of text[i] - hash creates a rolling hash subtract the old first character and add the new last character then mod to get the hahs
             subStringHashVal = ((chars * (subStringHashVal - text.at(i) * hash) + text.at(i + pattern.length()) )% primeNumber);
 
             if(subStringHashVal < 0)//takes care of cases where substring hash is negative

@@ -97,6 +97,8 @@ vector<int> rabinKarpSearch(string text, string pattern, int primeNumber)
 
 void readControlFile(fstream& ctrl, string out)//takes in fstream control file
 {
+    int f = 0;
+
     fstream output;//declares output.txt
     output.open(out, ios::out);//opens output file
     if(!output)//if cant open the output file
@@ -129,6 +131,7 @@ void readControlFile(fstream& ctrl, string out)//takes in fstream control file
     //all these are before the while loop to do a prime read to fix errors that can happen
     while(counter < numberOfInputFiles)
     {
+        cout << "Got to while loop " << f << endl;
         counter++;//increments counter
 
         std::clock_t startTrivial;
@@ -172,6 +175,7 @@ void readControlFile(fstream& ctrl, string out)//takes in fstream control file
 
 void outputToFile(fstream& output, vector<int>& rkVector, vector<int>& trivialVector, clock_t rkTime, clock_t trivialTime, bool showPatternLocation, string inputFile, string pattern)
 {
+    cout << "gets to the output" << endl;
     output << endl << "Input File: " << inputFile  << " Searching for: " << pattern << endl;
     output << endl <<"Trivial" << endl;//labels this section as trivial info
     output << "Trivial Time: " <<trivialTime / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;//adds the time of function to output
